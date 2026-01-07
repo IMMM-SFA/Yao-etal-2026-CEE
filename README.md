@@ -49,9 +49,9 @@ Use the scripts found in the `figures` directory to reproduce the figures used i
 | 2  | [Figure_2.py](./figures/Figure_2.py) | Drought exposure and intensity  | <a href="./figures/figures/Figure_2.png"><img width="100" src="./figures/figures/Figure_2.png"/></a> |
 | 3  | [Figure_3.py](./figures/Figure_3.m) | Mean projected changes in production loss | <a href="./figures/figures/Figure_3.png"><img width="100" src="./figures/figures/Figure_3.png"/></a> |
 | 4  | [Figure_4.py](./figures/Figure_4.m) | Scenario and ESM variant uncertainty in projection | <a href="./figures/figures/Figure_4.png"><img width="100" src="./figures/figures/Figure_4.png"/></a> |
-| 5  | [Figure_5.py](./figures/Figure_5.m) | Relative differences in financial loss between scenarios | <a href="./figures/figures/Figure_4.png"><img width="100" src="./figures/figures/Figure_4.png"/></a> |
-| 6  | [Figure_6.py](./figures/Figure_6.m) | Validation of CLM’s performance | <a href="./figures/figures/Figure_4.png"><img width="100" src="./figures/figures/Figure_4.png"/></a> |
-| S1  | [Figure_S1.m](./figures/Figure_S1.m) | Projected changes for nine land use and land cover types | <a href="./figures/figures/Figure_S2.png"><img width="100" src="./figures/figures/Figure_S2.png"/></a> |
+| 5  | [Figure_5.py](./figures/Figure_5.m) | Relative differences in financial loss between scenarios | <a href="./figures/figures/Figure_5.png"><img width="100" src="./figures/figures/Figure_5.png"/></a> |
+| 6  | [Figure_6.py](./figures/Figure_6.m) | Validation of CLM’s performance | <a href="./figures/figures/Figure_6.png"><img width="100" src="./figures/figures/Figure_6.png"/></a> |
+| S1  | [Figure_S1.m](./figures/Figure_S1.m) | Projected changes for nine land use and land cover types | <a href="./figures/figures/Figure_S1.png"><img width="100" src="./figures/figures/Figure_S1.png"/></a> |
 | S2  | [Figure_S2.m](./figures/Figure_S2.m) | Projected changes in annual and seasonal air temperature | <a href="./figures/figures/Figure_S2.png"><img width="100" src="./figures/figures/Figure_S2.png"/></a> |
 | S3  | [Figure_S3.m](./figures/Figure_S3.m) | Projected changes in annual and seasonal precipitation | <a href="./figures/figures/Figure_S3.png"><img width="100" src="./figures/figures/Figure_S3.png"/></a> |
 | S4  | [Figure_S4.m](./figures/Figure_S4.m) | Projected changes in annual and seasonal potential evapotranspiration | <a href="./figures/figures/Figure_S4.png"><img width="100" src="./figures/figures/Figure_S4.png"/></a> |
