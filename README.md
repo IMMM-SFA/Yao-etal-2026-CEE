@@ -1,6 +1,6 @@
 <!--[![DOI](https://zenodo.org/badge/265254045.svg)](https://zenodo.org/doi/10.5281/zenodo.10442485)-->
 
-# ya0-etal\_2026\_communications-earth-environment
+# yao-etal\_2026\_communications-earth-environment
 
 **Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Across the Contiguous United States**
 
