@@ -13,21 +13,18 @@ A meta-repository creates a single point of access for someone to find all of th
 
 # lastname-etal_year_journal
 
-**your Paper Title here (once published, include a link to the text)**
+**Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Across the Contiguous United States**
 
-First Last<sup>1\*</sup>, First Last<sup>1</sup>,  and First Last<sup>1, 2</sup>
+Lili Yao1*, Hongxiang Yan1, Ning Sun1*, Eva Sinha1, Kanishka B. Narayan1, Travis B. Thurber1, and Jennie Rice1 
+1Pacific Northwest National Laboratory, Richland, WA, USA
 
-<sup>1 </sup>Pacific Northwest National Laboratory, Richland, WA, USA.
-
-<sup>2 </sup> Institute for Energy Analysis, Oak Ridge Associated Universities, Washington, DC, USA
-
-\* corresponding author:  email@myorg.gov
+* Correspondence: Lili Yao, lili.yao@pnnl.gov; Ning Sun, ning.sun@pnnl.gov
 
 ## Abstract
-_your abstract here_
+Agricultural drought (AD) poses a major threat to food security, yet its future risk remains uncertain under co-evolving atmospheric conditions and land-use trajectories. Using an integrated, multi-sector modeling framework, we project AD risks for major crops across the contiguous United States (CONUS) through 2055 under a range of plausible futures that capture thermodynamic changes and land-use and land-cover change (LULCC) trajectories. Model projections reveal that drought-driven crop production losses increase sharply by nearly 60% for corn, 250% for wheat, and 135% for soybean relative to historical levels. The primary drivers of these increases, which include atmospheric shifts and LULCC, vary by region and crop type.  LULCC acting as an important risk amplifier in regions experiencing cropland expansion into drought-prone regions, such as the Great Plains and northwestern U.S. Wheat exhibits the largest projected loss increases, a result that remains robust across scenarios. These findings highlight that interactions between atmospheric conditions and land-use trajectories shape future agricultural drought risk and should be jointly considered to support effective adaptation and food-system planning.
 
 ## Journal reference
-_your journal reference_
+Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Across the Contiguous United States. Submitted to Communications Earth & Environment– January 2026.
 
 ## Code reference
 References for each minted software release for all code involved.  
