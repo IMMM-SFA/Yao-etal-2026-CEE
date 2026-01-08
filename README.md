@@ -4,7 +4,7 @@
 
 **Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Across the U.S.**
 
-Lili Yao<sup>1*</sup>, Hongxiang Yan<sup>1</sup>, Ning Sun<sup>1</sup>, Eva Sinha<sup>1</sup>, Kanishka B. Narayan<sup>1</sup>, Travis B. Thurber<sup>1</sup>, and Jennie Rice<sup>1</sup>
+Lili Yao<sup>1*</sup>, Hongxiang Yan<sup>1</sup>, Ning Sun<sup>1*</sup>, Eva Sinha<sup>1</sup>, Kanishka B. Narayan<sup>1</sup>, Travis B. Thurber<sup>1</sup>, and Jennie Rice<sup>1</sup>
 
 <sup>1 </sup> Pacific Northwest National Laboratory, Richland, WA, USA
 <br/>
