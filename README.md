@@ -2,7 +2,7 @@
 
 # yao_etal_2026_cee
 
-**Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Across the Contiguous United States**
+**Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Across the U.S.**
 
 Lili Yao<sup>1*</sup>, Hongxiang Yan<sup>1</sup>, Ning Sun<sup>1</sup>, Eva Sinha<sup>1</sup>, Kanishka B. Narayan<sup>1</sup>, Travis B. Thurber<sup>1</sup>, and Jennie Rice<sup>1</sup>
 
@@ -38,7 +38,7 @@ Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Acros
 
 ## Reproduce my experiment
 
-Clone the [CLM5 repository](https://github.com/ESCOMP/CTSM/tree/ctsm5.1.dev118) to set up the CLM5 model. You will need to download the [TGW forcing data](https://data.msdlive.org/records/ksw6r-2xv06) and convert them into CLM input format using these [scripts](https://github.com/IMMM-SFA/im3components/tree/main/im3components/wrf\_to\_clm). You will also need to replace the default CLM surface and landuse timeseries files using data from the [GCAM-SELECT-Demeter](https://data.msdlive.org/records/vy529-6eg15). In addition, hydrological parameter values in the default parameter file and the user name list file should be updated based the [behavioral parameter values](https://data.msdlive.org/records/41bw1-3q739). The [output data repository](TBD) already contains the soil moisutre and crop yield output from the CLM5 model so you can skip rerunning the CLM5 model if you want to save time.
+Clone the [CLM5 repository](https://github.com/ESCOMP/CTSM/tree/ctsm5.1.dev118) to set up the CLM5 model. You will need to download the [TGW forcing data](https://data.msdlive.org/records/ksw6r-2xv06) and convert them into CLM input format using these [scripts](https://github.com/IMMM-SFA/im3components/tree/main/im3components/wrf\_to\_clm). You will also need to replace the default CLM surface and landuse timeseries files using data from the [GCAM-SELECT-Demeter](https://data.msdlive.org/records/vy529-6eg15). In addition, hydrological parameter values in the default parameter file and the user name list file should be updated based the [behavioral parameter values](https://data.msdlive.org/records/41bw1-3q739). The [output data repository](https://data.msdlive.org/records/gmcgt-pvx90) already contains the soil moisutre and crop yield output from the CLM5 model so you can skip rerunning the CLM5 model if you want to save time.
 
 ## Reproduce my figures
 Use the scripts found in the `figures` directory to reproduce the figures used in this publication.
