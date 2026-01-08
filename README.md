@@ -28,7 +28,7 @@ Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Acros
 ### Output Data
 | Dataset | URL | DOI |
 |:-------:|:---:|:---:|
-| CLM5 soil moisture and crop yield simulations | (https://data.msdlive.org/records/gmcgt-pvx90) | (https://doi.org/10.57931/3012125) |
+| CLM5 soil moisture and crop yield simulations | https://data.msdlive.org/records/gmcgt-pvx90 | https://doi.org/10.57931/3012125 |
 
 ### Contributing Modeling Software
 | Model | Version | URL | DOI |
