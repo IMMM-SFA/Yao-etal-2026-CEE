@@ -15,7 +15,7 @@ Lili Yao<sup>1*</sup>, Hongxiang Yan<sup>1</sup>, Ning Sun<sup>1*</sup>, Eva Sin
 Agricultural drought (AD) poses a major threat to food security, yet its future risk remains uncertain under co-evolving atmospheric conditions and land-use trajectories. Using an integrated, multi-sector modeling framework, we project AD risks for major crops across the contiguous United States (CONUS) through 2055 under a range of plausible futures that capture thermodynamic changes and land-use and land-cover change (LULCC) trajectories. Model projections reveal that drought-driven crop production losses increase sharply by nearly 60% for corn, 250% for wheat, and 135% for soybean relative to historical levels. The primary drivers of these increases, which include atmospheric shifts and LULCC, vary by region and crop type.  LULCC acts as an important risk amplifier in regions experiencing cropland expansion into drought-prone regions, such as the Great Plains and northwestern U.S. Wheat exhibits the largest projected loss increases, a result that remains robust across scenarios. These findings highlight that interactions between atmospheric conditions and land-use trajectories shape future agricultural drought risk and should be jointly considered to support effective adaptation and food-system planning.
 
 ## Journal reference
-Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Across the U.S. Submitted to Communications Earth & Environment– January 2026.
+Coupled Atmospheric and Land-use Shifts Amplify Drought-driven Crop Losses Across the U.S. Submitted to Earth's Future – January 2026.
 
 ## Data Reference
 
