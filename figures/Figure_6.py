@@ -1,252 +1,151 @@
-############################################ the first part of the figure 
-from scipy.stats import pearsonr
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-
-clm_df = pd.read_csv("regional_sri_clm.csv", index_col="time")
-grfr_df = pd.read_csv("regional_sri_grfr.csv", index_col="time")
-
-clm_df.index = pd.to_datetime(clm_df.index)
-grfr_df.index = pd.to_datetime(grfr_df.index)
-
-# Define regions and corresponding labels
-regions = ['NE', 'SE', 'MW', 'NGP', 'SGP', 'NW', 'SW']
-labels = ['(a1)', '(a2)', '(a3)', '(a4)', '(a5)', '(a6)', '(a7)']
-
-# Verify that both dataframes have the same regions
-assert set(clm_df.columns) == set(grfr_df.columns) == set(regions), "Region columns do not match"
-
-# Create individual scatter plots for each region
-for region, label in zip(regions, labels):
-
-    plt.figure(figsize=(4, 4))  
-    
-    # Extract SRI values for the region
-    clm_sri = clm_df[region]
-    grfr_sri = grfr_df[region]
-    
-    # Drop NaN pairs for correlation
-    valid = clm_sri.notna() & grfr_sri.notna()
-    clm_valid = clm_sri[valid]
-    grfr_valid = grfr_sri[valid]
-    
-    # Calculate Pearson correlation
-    if len(clm_valid) > 1:  # Ensure enough data points
-        r, _ = pearsonr(clm_valid, grfr_valid)
-        print(f"{region}: r = {r:.2f}")
-    else:
-        print(f"{region}: Insufficient data for correlation")
-        r = np.nan
-    
-    # Scatter plot
-    plt.scatter( grfr_sri, clm_sri, alpha=0.5, s=20)
-    
-    # Determine the same range for x and y axes
-    min_val = min(clm_sri.min(), grfr_sri.min())
-    max_val = max(clm_sri.max(), grfr_sri.max())
-    # Round limits to nearest 0.5 for consistent tick intervals
-    axis_min = np.floor(min_val / 0.5) * 0.5
-    axis_max = np.ceil(max_val / 0.5) * 0.5
-    
-    # Set same limits for both axes
-    plt.xlim(axis_min, axis_max)
-    plt.ylim(axis_min, axis_max)
-    
-    # Set same ticks for both axes with 0.5 interval
-    ticks = np.arange(axis_min, axis_max + 0.5, 1.0)
-    plt.xticks(ticks, fontsize=12)
-    plt.yticks(ticks, fontsize=12)
-    
-    # Add 1:1 line
-    plt.plot([axis_min, axis_max], [axis_min, axis_max], 'r--', label='1:1 line')
-    
-    # Set labels and title
-    plt.ylabel('CLM5 SRI', fontsize=14)
-    plt.xlabel('GRFR SRI', fontsize=14)
-    plt.title(f'{label} {region} (r={r:.2f})', fontsize=14)
-    plt.legend(loc='lower right')
-    
-    plt.gca().set_aspect('equal', adjustable='box')
-    
-    plt.tight_layout()
-    plt.savefig(f'clm_grfr_sri_scatter_{region}.png')
-    plt.close()
-    
-    
-    
-############################################ the second part of the figure    
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import linregress, pearsonr
-import matplotlib.ticker as ticker
-import pandas as pd
+from scipy.stats import gaussian_kde
+
+# state to NCA mapping CSV file
+nca_mapping_path = 'state_nca_mapping.csv'  
+nca_mapping = pd.read_csv(nca_mapping_path)
+
+crop_colors = {
+    'corn': '#4c78a8',  # Blue
+    'wheat': '#f58518',  # Orange
+    'soybean': '#009e73'  # Teal
+}
+
+plt.figure(figsize=(5, 5))
+
+# Data path
+path = '/data_path/'
+
+# Define region colors
+# Colorblind-friendly colors for regions
+region_colors = {
+    1: '#4c78a8',  # Northeast: Blue
+    2: '#f58518',  # Southeast: Orange
+    4: '#54a24b',  # Midwest: Olive green 
+    5: '#b79a20',  # N. Great Plains: Gold
+    6: '#7b4e99',  # S. Great Plains: Purple 
+    8: '#e45756',  # Northwest: Salmon
+    7: '#79706e'   # Southwest: Gray
+}
+region_names = {
+    1: 'NE',
+    2: 'SE',
+    4: 'MW',
+    5: 'NGP',
+    6: 'SGP',
+    8: 'NW',
+    7: 'SW'
+}
 
 
-path = '/path_to_data_dir/'
-df_usda = pd.read_csv(f'{path}state_corn_usda_1981-2015.csv')
-df_usda['Value'] = pd.to_numeric(df_usda['Value'].str.replace(',', ''), errors='coerce')
-
-area_target_items = [
-'CORN, GRAIN - ACRES HARVESTED'
-]
-df_usda_area = df_usda[df_usda['Data Item'].isin(area_target_items)]
-usda_harvested_area = df_usda_area[['State', 'Year', 'Value']].rename(columns={'Value': 'Harvest_Area(acre)'})
-
-production_target_items = [
-'CORN, GRAIN - PRODUCTION, MEASURED IN BU'
-]
-
-
-df_usda_production = df_usda[df_usda['Data Item'].isin(production_target_items)]
-usda_production = df_usda_production[['State', 'Year', 'Value']].rename(columns={'Value': 'Production(BU)'})
-usda_merged = pd.merge(usda_harvested_area ,usda_production , on = ['State','Year'])
-
-usda_merged['Yield_bu_per_acre'] = usda_merged['Production(BU)'] / usda_merged['Harvest_Area(acre)']
-
-
-
-df_clm = pd.read_csv('corn_1981-2015.csv')
-state_list = list(np.unique(df_usda['State']))
-
-
-df_clm_filtered = df_clm[df_clm['State_Name'].isin(state_list)]
-
-
-df_clm_filtered['Yield_bu_per_acre'] = df_clm_filtered['Production(BU)'] / (df_clm_filtered['Harvest_Area(km^2)']*247.105)
-
-df_clm_clear = df_clm_filtered[['State_Name', 'Year', 'Yield_bu_per_acre','Production(BU)','Harvest_Area(km^2)']]
-
-comparison = pd.merge(
-    usda_merged,
-    df_clm_clear,
-    left_on=['State', 'Year'],
-    right_on=['State_Name', 'Year'],
-    suffixes=('_usda', '_clm')
-)
-
-fig, ax = plt.subplots(1, 1, figsize=(4, 4))
-
-plt.scatter(comparison['Production(BU)_usda']/39.368,comparison['Production(BU)_clm']/39.368, color='blue',s=10) # convert the unit from bu to ton
-correlation_coefficient, p_value = pearsonr(comparison['Production(BU)_usda'],comparison['Production(BU)_clm'])
-print ('correlation_coefficient, p_value',correlation_coefficient, p_value)
-
-states = ['IOWA', 'ILLINOIS', 'MINNESOTA','INDIANA','NEBRASKA','SOUTH DAKOTA','WISCONSIN','OHIO','MISSOURI','KANSAS']
-comparison_selected = comparison[comparison['State_Name'].isin(states)]
-
-correlation_coefficient_selected, p_value_selected = pearsonr(comparison_selected['Production(BU)_usda'],comparison_selected['Production(BU)_clm'])
-print ('correlation_coefficient_selected, p_value_selected',correlation_coefficient_selected, p_value_selected)
-
-corr_text = f"Pearson r = {correlation_coefficient:.3f}\np-value = {p_value:.3f}"
-plt.text(
-    0.05, 0.95, corr_text,
-    transform=plt.gca().transAxes,
-    verticalalignment='top',
-    fontsize=10,
-    bbox=dict(boxstyle="round", facecolor="white", alpha=0.6)
-)
-
-plt.ylim(5e1,1e8)
-plt.xlim(5e3,1e8)
-plt.xscale('log')
-plt.yscale('log')
-
+# Create figure and split axes
+fig = plt.figure(figsize=(5, 6))  # Increased height for two subplots
+fig.set_facecolor('white')  # Ensure consistent background
 ax = plt.gca()
-ax.xaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs='auto', numticks=10))
-ax.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs='auto', numticks=10))
+ax.set_facecolor('white')  # Match subplot background to figure
+divider = make_axes_locatable(ax)
+ax_top = divider.append_axes("top", size="40%", pad=0, sharex=ax)
+ax_bottom = ax  # Bottom axis is the main axis
+ax_top.spines['bottom'].set_visible(False)  # Hide bottom spine of top subplot
+ax_bottom.spines['top'].set_visible(False)  # Hide top spine of bottom subplot
+# Plot on both axes
+for crop in ['corn']:
+    ## near future
+    df_345c_nf = pd.read_csv(f'{path}{crop}_financial_loss_nf_3_45_c_2021-2055.csv')
+    df_585c_nf = pd.read_csv(f'{path}{crop}_financial_loss_nf_5_85_c_2021-2055.csv')
+    df_345h_nf = pd.read_csv(f'{path}{crop}_financial_loss_nf_3_45_h_2021-2055.csv')
+    df_585h_nf = pd.read_csv(f'{path}{crop}_financial_loss_nf_5_85_h_2021-2055.csv')
+    # Merge the NCA mapping to the original data based on 'state_id'
+    df_345c_nf = df_345c_nf.merge(nca_mapping, on='state_id', how='left')
+    df_585c_nf = df_585c_nf.merge(nca_mapping, on='state_id', how='left')
+    df_345h_nf = df_345h_nf.merge(nca_mapping, on='state_id', how='left')
+    df_585h_nf = df_585h_nf.merge(nca_mapping, on='state_id', how='left')
+    # Replace zeros with a small value (1e-10) to avoid division by zero
+    df_585c_nf['Financial_Loss($)'] = df_585c_nf['Financial_Loss($)'].replace(0, 1e-10)
+    df_585h_nf['Financial_Loss($)'] = df_585h_nf['Financial_Loss($)'].replace(0, 1e-10)
+    # Group by 'Year' for CONUS aggregates
+    df_345c_conus_nf = df_345c_nf.groupby('Year').sum()[['Production_Loss(ton)', 'Financial_Loss($)']]
+    df_585c_conus_nf = df_585c_nf.groupby('Year').sum()[['Production_Loss(ton)', 'Financial_Loss($)']]
+    df_345h_conus_nf = df_345h_nf.groupby('Year').sum()[['Production_Loss(ton)', 'Financial_Loss($)']]
+    df_585h_conus_nf = df_585h_nf.groupby('Year').sum()[['Production_Loss(ton)', 'Financial_Loss($)']]
+    # Replace zeros in CONUS aggregates
+    df_585c_conus_nf['Financial_Loss($)'] = df_585c_conus_nf['Financial_Loss($)'].replace(0, 1e-10)
+    df_585h_conus_nf['Financial_Loss($)'] = df_585h_conus_nf['Financial_Loss($)'].replace(0, 1e-10)
+    # Now group by 'nca_id' and 'Year' for regional data
+    df_345c_nca_nf = df_345c_nf.groupby(['nca_id', 'Year']).sum()[['Production_Loss(ton)', 'Financial_Loss($)']]
+    df_585c_nca_nf = df_585c_nf.groupby(['nca_id', 'Year']).sum()[['Production_Loss(ton)', 'Financial_Loss($)']]
+    df_345h_nca_nf = df_345h_nf.groupby(['nca_id', 'Year']).sum()[['Production_Loss(ton)', 'Financial_Loss($)']]
+    df_585h_nca_nf = df_585h_nf.groupby(['nca_id', 'Year']).sum()[['Production_Loss(ton)', 'Financial_Loss($)']]
+    # Calculate the relative difference in financial loss
+    diff_h_nf = (df_345h_nca_nf['Financial_Loss($)'] - df_585h_nca_nf['Financial_Loss($)']) / df_585h_nca_nf['Financial_Loss($)'] * 100
+    diff_c_nf = (df_345c_nca_nf['Financial_Loss($)'] - df_585c_nca_nf['Financial_Loss($)']) / df_585c_nca_nf['Financial_Loss($)'] * 100
+    diff_nf = (diff_c_nf + diff_h_nf)/2.0
+    # Calculate the relative change in financial loss for CONUS
+    diff_h_nf_conus = (df_345h_conus_nf['Financial_Loss($)'] - df_585h_conus_nf['Financial_Loss($)']) / df_585h_conus_nf['Financial_Loss($)'] * 100
+    diff_c_nf_conus = (df_345c_conus_nf['Financial_Loss($)'] - df_585c_conus_nf['Financial_Loss($)']) / df_585c_conus_nf['Financial_Loss($)'] * 100
+    diff_nf_conus = (diff_c_nf_conus + diff_h_nf_conus)/2.0
+    # Apply Kernel Density Estimation (KDE) for smoothing
+    kde_nf_conus = gaussian_kde(diff_nf_conus, bw_method=0.1)
+    x_nf_conus = np.linspace(min(diff_nf_conus), max(diff_nf_conus), 2000)
+    pdf_nf_conus = kde_nf_conus.evaluate(x_nf_conus)
+    cdf_nf_conus = np.cumsum(pdf_nf_conus) * (x_nf_conus[1] - x_nf_conus[0]) / np.max(np.cumsum(pdf_nf_conus) * (x_nf_conus[1] - x_nf_conus[0]))
+    
+    # Plot CONUS on both axes
+    ax_top.plot(x_nf_conus, cdf_nf_conus, linestyle='-', color='black', linewidth=3, label='CONUS')
+    ax_bottom.plot(x_nf_conus, cdf_nf_conus, linestyle='-', color='black', linewidth=3, label='CONUS')
+    # Find x-value where CDF reaches y=0.99 for CONUS
+    idx_conus = np.argmin(np.abs(cdf_nf_conus - 0.99))
+    x_conus_99 = x_nf_conus[idx_conus]
+    ax_top.vlines(x=x_conus_99, ymin=0.9, ymax=0.99, color='black', linestyle=':', linewidth=1.5, alpha=0.7)
+    ax_bottom.vlines(x=x_conus_99, ymin=0, ymax=min(0.99, 0.9), color='black', linestyle=':', linewidth=1.5, alpha=0.7)
+    ax_bottom.text(x_conus_99 - 7, 0.015, f'{x_conus_99:.0f}', color='black', fontsize=12, ha='left', va='center', weight="bold") # crop_colors[crop],
+    # Iterate through each NCA and apply KDE for each NCA 
+    for nca_id in [4, 5, 6]:
+        diff_nf_nca = diff_nf.loc[nca_id].dropna()
+        kde_nf = gaussian_kde(diff_nf_nca, bw_method=0.1)
+        x_nf = np.linspace(min(diff_nf_nca), max(diff_nf_nca), 2000)
+        pdf_nf = kde_nf.evaluate(x_nf)
+        cdf_nf = np.cumsum(pdf_nf) * (x_nf[1] - x_nf[0]) / np.max(np.cumsum(pdf_nf) * (x_nf[1] - x_nf[0]))
+        # Plotting the CDF for the relative change in financial loss for each NCA
+        ax_top.plot(x_nf, cdf_nf, linestyle='-', color=region_colors[nca_id], linewidth=2, label=f'{region_names[nca_id]}')
+        ax_bottom.plot(x_nf, cdf_nf, linestyle='-', color=region_colors[nca_id], linewidth=2, label=f'{region_names[nca_id]}')
+        # Find x-value where CDF reaches y=0.99 for this region
+        idx_nca = np.argmin(np.abs(cdf_nf - 0.99))
+        x_nca_99 = x_nf[idx_nca]
+        ax_top.vlines(x=x_nca_99, ymin=0.9, ymax=0.99, color=region_colors[nca_id], linestyle=':', linewidth=1.5, alpha=0.7)
+        ax_bottom.vlines(x=x_nca_99, ymin=0, ymax=min(0.99, 0.9), color=region_colors[nca_id], linestyle=':', linewidth=1.5, alpha=0.7)
+        if nca_id == 6:
+            ax_bottom.text(x_nca_99-7 , 0.015, f'{x_nca_99:.0f}', color=region_colors[nca_id], fontsize=12, ha='left', va='center', weight="bold")
+        elif nca_id == 4:
+            ax_bottom.text(x_nca_99 + 1.5, 0.015, f'{x_nca_99:.0f}', color=region_colors[nca_id], fontsize=12, ha='left', va='center', weight="bold")
+        elif nca_id == 5:
+            ax_bottom.text(x_nca_99-7, 0.015, f'{x_nca_99:.0f}', color=region_colors[nca_id], fontsize=12, ha='left', va='center', weight="bold")   
+            
+# Final plot settings
+ax_top.set_ylim(0.90, 1.0)  # Zoomed-in range for high probabilities
+ax_bottom.set_ylim(0, 0.90)  # Lower range to align at y=0.9
+ax_top.set_xlim(-50, 100)
+ax_bottom.set_xlim(-50, 100)
+ax_bottom.set_xlabel('atm45_ssp3 vs atm85_ssp5 in Financial Loss (%)', fontsize=14)
+# ax_bottom.set_ylabel('Cumulative Probability', fontsize=14, labelpad=10)
+# Final plot settings
+fig.text(-0.001, 0.5, 'Cumulative Probability', rotation=90, ha='center', va='center', fontsize=16)
+fig.text(0.21, 0.93, '(a) Corn', rotation=0, ha='center', va='center', fontsize=14)
 
-ax.xaxis.set_major_locator(ticker.LogLocator(base=10.0, numticks=10))
-ax.yaxis.set_major_locator(ticker.LogLocator(base=10.0, numticks=10))
-
-ax.xaxis.set_minor_formatter(ticker.NullFormatter())
-ax.yaxis.set_minor_formatter(ticker.NullFormatter())
-
-plt.title('(b1) Corn annual production (ton)')
-plt.xlabel('USDA-NASS',fontsize=12)
-plt.ylabel('CLM5',fontsize=12)
-plt.tick_params(axis='both', labelsize=12) 
-plt.tight_layout()
-plt.savefig('USDA_vs_CLM_corn_state-year.png', dpi=500, bbox_inches='tight')
-
-
-############################################ the first part of the figure 
-import pandas as pd
-import numpy as np 
-import matplotlib.pyplot as plt
-from scipy.stats import spearmanr
-from scipy.stats import pearsonr
-
-# Calculate ubRMSE (Unbiased RMSE) for each crop
-def calculate_ubrmse(predictions, observations):
-    x_mean = np.mean(predictions)
-    y_mean = np.mean(observations)
-    ub_rmse = np.sqrt(np.mean((predictions - x_mean - (observations - y_mean))**2))
-    return ub_rmse
-
-
-price = 'projected_price'
-path = '/path_to_base_dir/'
-df1_corn = pd.read_csv(path + 'corn_insurance_drought.csv')
-df2_corn = pd.read_csv(path + 'corn_production_loss_hist_cl100.csv')
-df3_corn = pd.read_csv(path + 'corn_price.csv')
-
-
-df1_corn['State'] = df1_corn['State'].str.upper()  # Convert to uppercase to match df2
-df1_corn['payment_per_acreage'] = df1_corn['Payment Indemnity']/df1_corn['Payment Acreage']
-df2_corn = df2_corn.merge(df3_corn[['Year', price]], on='Year', how='left')
-
-conversion_factor_corn = 39.368  # corn 1 ton = 39.368 bushels
-df2_corn['economy_loss'] = df2_corn['Production_Loss(ton)'] * conversion_factor_corn * df2_corn[price]
-df2_corn['loss_per_acreage'] = df2_corn['economy_loss']/(df2_corn['Area_Loss(km^2)']*247.105)
-df1_corn = df1_corn[(df1_corn['Year'] >= 2001) & (df1_corn['Year'] <= 2015)]
-df2_corn = df2_corn[(df2_corn['Year'] >= 2001) & (df2_corn['Year'] <= 2015)]
-df2_corn = df2_corn.rename(columns={'State_Name': 'State'})
-df_merged_corn = pd.merge(df1_corn[['Year', 'State', 'payment_per_acreage']], df2_corn[['Year', 'State', 'loss_per_acreage']], on=['Year', 'State'], how='inner')
-
-# List of states to keep after merging, total corn area of these 10 states account for 76% of the CONUS corn area
-states = ['IOWA', 'ILLINOIS', 'MINNESOTA','INDIANA','NEBRASKA','SOUTH DAKOTA','WISCONSIN','OHIO','MISSOURI','KANSAS']
-states_to_keep_corn = [state.upper() for state in states]
-
-# Filter the merged DataFrame to keep only the selected states
-df_merged_filtered_corn = df_merged_corn[df_merged_corn['State'].isin(states_to_keep_corn)]
-df_merged_filtered_corn = df_merged_filtered_corn.fillna(0)
-
-fig, ax = plt.subplots(1, 1, figsize=(4, 4))
-
-plt.scatter(df_merged_filtered_corn['payment_per_acreage'], df_merged_filtered_corn ['loss_per_acreage'], color='blue', label='Corn',s=25)
-plt.xlim(0, 500)
-plt.ylim(0, 500)
-plt.xlabel('Indemnity Payments ($/acre) ',fontsize=12)
-plt.ylabel('Estimated Financial Losses ($/acre)',fontsize=12)
-plt.tick_params(axis='both', labelsize=12) 
-df_clean_corn = df_merged_filtered_corn.dropna(subset=['loss_per_acreage', 'payment_per_acreage'])
-spearman_corr_corn, p_value_corn = spearmanr(df_clean_corn['loss_per_acreage'], df_clean_corn['payment_per_acreage'])
-print(f"Spearman Correlation_corn: {spearman_corr_corn:.4f}")
-print(f"P-value_corn: {p_value_corn:.4f}")
-
-slope_corn, intercept_corn, _, _, _ = linregress(df_clean_corn['payment_per_acreage'], df_clean_corn['loss_per_acreage'])
-
-ub_rmse_corn = calculate_ubrmse(df_clean_corn['loss_per_acreage'], df_clean_corn['payment_per_acreage'])
-
-# Calculate Pearson correlation for corn
-pearson_corr_corn, p_value_corn = pearsonr(df_clean_corn['loss_per_acreage'], df_clean_corn['payment_per_acreage'])
-print(f"Pearson Correlation for Corn: {pearson_corr_corn:.4f}")
-print(f"P-value for Pearson Correlation: {p_value_corn:.4f}")
-
-corr_text = f"Pearson r = {pearson_corr_corn:.3f}\np-value = {p_value_corn:.3f}\nub-rmse={ub_rmse_corn:.1f} $/acre"
-plt.text(
-    0.05, 0.95, corr_text,
-    transform=plt.gca().transAxes,
-    verticalalignment='top',
-    fontsize=10,
-    bbox=dict(boxstyle="round", facecolor="white", alpha=0.6)
-)
-
-plt.xticks(np.arange(0, 501, 100))  
-plt.yticks(np.arange(0, 501, 100))  
-plt.title('(c1) Corn')  # Added r to title
-plt.tight_layout()
-print(f"ubRMSE for Corn: {ub_rmse_corn:.4f}")
-
-save_path = 'CLM_vs_AgRiskViewer_scatter_corn.png'
-plt.savefig(save_path, format='png',bbox_inches='tight')
+ax_top.set_ylabel('', fontsize=14)  # No y-label for top axis
+ax_top.tick_params(axis='x', which='both', bottom=False, labelbottom=False)  # Hide x-ticks on top axis
+ax_top.set_yticks([0.95, 0.99])  # Ticks for top axis
+ax_bottom.set_yticks([0, 0.3, 0.6, 0.9])  # Ticks for bottom axis, including 0.9
+ax_top.tick_params(axis='y', labelsize=14)
+ax_bottom.tick_params(axis='both', labelsize=14)
+ax_top.grid(True, linestyle='--', alpha=0.7, which='major', axis='y')
+ax_bottom.grid(True, linestyle='--', alpha=0.7, which='major', axis='y')
+ax_top.axvline(x=0, color='gray', linestyle='--', linewidth=2, alpha=0.8)
+ax_bottom.axvline(x=0, color='gray', linestyle='--', linewidth=2, alpha=0.8)
+# ax_bottom.legend(fontsize=12, loc='center right')
+fig.tight_layout(pad=0.5)
+plt.savefig(f'{path}/financial_loss_345diff585_corn_mean.png', dpi=300, bbox_inches='tight')
+print ('done')
