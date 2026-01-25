@@ -45,8 +45,8 @@ Use the scripts found in the `figures` directory to reproduce the figures used i
 
 | Figure Numbers | Script Name | Description | Figure |
 |:--------------:|:-----------:|:-----------:|:------:|
-| 1  | [Figure_1.m](./figures/Figure_1.m) | Rainfed crop planting areas changes | <a href="./figures/figures/Figure_1.png"><img width="100" src="./figures/figures/Figure_1.png"/></a> |
-| 2  | [Figure_2.py](./figures/Figure_2.py) | Drought exposure and intensity  | <a href="./figures/figures/Figure_2.png"><img width="100" src="./figures/figures/Figure_2.png"/></a> |
+| 1  | [Figure_1.py](./figures/Figure_1.py) | Rainfed crop planting areas changes | <a href="./figures/figures/Figure_1.png"><img width="100" src="./figures/figures/Figure_1.png"/></a> |
+| 2  | [Figure_2.m](./figures/Figure_2.m) | Drought exposure and intensity  | <a href="./figures/figures/Figure_2.png"><img width="100" src="./figures/figures/Figure_2.png"/></a> |
 | 3  | [Figure_3.py](./figures/Figure_3.py) | Mean projected changes in production loss | <a href="./figures/figures/Figure_3.png"><img width="100" src="./figures/figures/Figure_3.png"/></a> |
 | 4  | [Figure_4.py](./figures/Figure_4.py) | Scenario and ESM variant uncertainty in projection | <a href="./figures/figures/Figure_4.png"><img width="100" src="./figures/figures/Figure_4.png"/></a> |
 | 5  | [Figure_5.py](./figures/Figure_5.py) | Relative differences in financial loss between scenarios | <a href="./figures/figures/Figure_5.png"><img width="100" src="./figures/figures/Figure_5.png"/></a> |
